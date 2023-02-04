@@ -9,7 +9,7 @@ class Si_Data_Source_Post_Model{
             where platform = 'facebook' 
                 and index_slave = 0 
                 and status = 0
-            order by total_comment desc
+                and type = 3
             limit 0, ${limit};`;
 
         return new Promise((resolve, reject)=>{
@@ -27,6 +27,26 @@ class Si_Data_Source_Post_Model{
         let query = `UPDATE social_index_v2.si_demand_source_post
             SET index_slave = ${indexSlave}
             WHERE id in (${listId});`;
+
+        return new Promise((resolve, reject)=>{
+            connection.query(query,  (error, results)=>{
+                if(error){
+                    return reject(null);
+                }
+
+                return resolve(results);
+            });
+        });
+    }
+
+    UpdateIndexSlaveIsPage(){
+        let query = `UPDATE social_index_v2.si_demand_source_post
+            SET index_slave = 255
+            where platform = 'facebook' 
+                and index_slave = 0 
+                and status = 0
+                and insert_time is NULL
+                and type = 2;`;
 
         return new Promise((resolve, reject)=>{
             connection.query(query,  (error, results)=>{
