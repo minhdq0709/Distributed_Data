@@ -5,10 +5,10 @@ let listIdSlave = [];
 const limit = 200;
 
 class HandleModel {
-    constructor(options) {
-        this.consumer = options.consumer;
+    constructor() {
+        //this.consumer = options.consumer;
         this.Init("./IdSlave.txt");
-        this.ListeningData();
+        //this.ListeningData();
         this.timer = setInterval(this.DistributedData.bind(this), 1 * 60 * 1000);
     }
 
@@ -26,18 +26,18 @@ class HandleModel {
         });
     }
 
-    ListeningData() {
-        this.consumer.on("ReceiveData", (idSlave) => {
-        if (!listIdSlave.includes(idSlave)) {
-            listIdSlave.unshift(idSlave);
-            try {
-                this.AppendFile("./IdSlave.txt", `${idSlave}\n`);
-            } catch (e) {
-                console.log("e: ", e);
-            }
-        }
-        });
-    }
+    // ListeningData() {
+    //     this.consumer.on("ReceiveData", (idSlave) => {
+    //     if (!listIdSlave.includes(idSlave)) {
+    //         listIdSlave.unshift(idSlave);
+    //         try {
+    //             this.AppendFile("./IdSlave.txt", `${idSlave}\n`);
+    //         } catch (e) {
+    //             console.log("e: ", e);
+    //         }
+    //     }
+    //     });
+    // }
 
     async DistributedData() {
         try {
