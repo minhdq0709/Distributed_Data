@@ -48,22 +48,29 @@ class HandleModel {
             }
 
             let si_Data_Source_Post_Model = new Si_Data_Source_Post_Model();
-            let listIdPost = await si_Data_Source_Post_Model.GetListIdPost(lengthSlave * limit, false);
+            let listIdPost = await si_Data_Source_Post_Model.GetListIdPostSpecial(lengthSlave * limit);
+            console.log("priority1: ", listIdPost.length);
+
+            if (listIdPost.length === 0) {
+                listIdPost = await si_Data_Source_Post_Model.GetListIdPost(lengthSlave * limit, false);
+                console.log("priority2: ", listIdPost.length);
+            }
 
             if (listIdPost.length === 0) {
                 listIdPost = await si_Data_Source_Post_Model.GetListIdPost(lengthSlave * limit, true);
+                console.log("priority3: ", listIdPost.length);
             }
 
-            console.log("listIdPost.length: ", listIdPost.length);
+            
             if (listIdPost && listIdPost.length > 0) {
                 let start = 0;
                 /* Swap item in list */
                 this.Shuffle(listIdSlave);
-
+                let quota = listIdPost.length / lengthSlave;
                 for (let i = 0; i < lengthSlave; ++i) {
-                    start = i * limit;
+                    start = i * quota;
                     let childData = listIdPost
-                        .slice(start, start + limit)
+                        .slice(start, start + quota)
                         .map((obj) => obj.id)
                         .join(",");
 
